@@ -64,60 +64,7 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'referral_code' => 'nullable',
-            'profile_image' => 'nullable|max:8192|image|mimes:png,jpeg,bmp,gif,svg,jpe,webp,jpg',
-            'addresses' => 'required',
-            'addresses.*.address_type_id' => 'required|exists:address_types,id',
-            'addresses.*.state_id' => 'required|exists:states,id',
-            'addresses.*.city_id' => 'required|exists:cities,id',
-            'addresses.*.country_id' => 'required|exists:countries,id',
-            'addresses.*.postal_code' => 'required',
-        ]);
-
-        DB::beginTransaction();
-
-        $member->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'referral_member_id' => $request->referral_member_id ?: NULL,
-        ]);
-
-        if (isset($request->profile_image)) {
-            $profile_image = $request->profile_image->getRealPath();
-            $member->addMedia($profile_image)->toMediaCollection('profile_image');
-        }
-
-        foreach ($request->addresses as $address)
-        {
-            if ($address['id'])
-            {
-                Address::find($address['id'])->update([
-                    'address_type_id' => $address['address_type_id'],
-                    'state_id' => $address['state_id'],
-                    'city_id' => $address['city_id'],
-                    'country_id' => $address['country_id'],
-                    'postal_code' => $address['postal_code'],
-                ]);
-            }
-            else
-            {
-                $member->addresses()->create([
-                    'address_type_id' => $address['address_type_id'],
-                    'state_id' => $address['state_id'],
-                    'city_id' => $address['city_id'],
-                    'country_id' => $address['country_id'],
-                    'postal_code' => $address['postal_code'],
-                ]);
-            }
-        }
-
-        DB::commit();
-        return redirect()->route('members.index')->with('success', trans('messages.update_succ'));
+        //
     }
 
     /**

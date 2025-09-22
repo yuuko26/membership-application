@@ -71,7 +71,7 @@ class Create extends Component
         $this->validate([
             'name' => 'required',
             'phone' => 'required|unique:members,phone,NULL,id,deleted_at,NULL',
-            'email' => 'required|unique:members,email,NULL,id,deleted_at,NULL',
+            'email' => 'required|email|unique:members,email,NULL,id,deleted_at,NULL',
             'referral_code' => 'nullable',
             'profile_image' => 'nullable|max:8192|image|mimes:png,jpeg,bmp,gif,svg,jpe,webp,jpg',
             'addresses' => 'required',

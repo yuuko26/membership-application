@@ -30,22 +30,22 @@
                             @endempty
                         </div>
                     </div>
-                    @error('profile_image') <div class="invalid-feedback d-block">{{ $message }}</div >@enderror
+                    @error('profile_image') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputName" class="form-label">Name<span class="text-danger"> *</span></label>
                     <input type="text" class="form-control" id="inputName" wire:model="name" value="{{old('name', '')}}" placeholder="Name">
-                    @error('name') <div class="invalid-feedback d-block">{{ $message }}</div >@enderror
+                    @error('name') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputPhone" class="form-label">Phone<span class="text-danger"> *</span></label>
                     <input type="text" class="form-control" id="inputPhone" wire:model="phone" value="{{old('phone', '')}}" placeholder="Phone">
-                    @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div >@enderror
+                    @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputEmail" class="form-label">Email<span class="text-danger"> *</span></label>
                     <input type="email" class="form-control" id="inputEmail" wire:model="email" value="{{old('email', '')}}" placeholder="Email">
-                    @error('email') <div class="invalid-feedback d-block">{{ $message }}</div >@enderror
+                    @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group col-md-6">
                     @if($member->referred_by)
@@ -54,7 +54,7 @@
                     @else
                         <label for="inputReferralCode" class="form-label">Referral Code</label>
                         <input type="text" class="form-control" id="inputReferralCode" wire:model="referral_code" value="{{old('referral_code', '')}}" placeholder="Referral Code">
-                        @error('referral_code') <div class="invalid-feedback d-block">{{ $message }}</div >@enderror
+                        @error('referral_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     @endif
                 </div>
                 <div class="form-group col-md-6">

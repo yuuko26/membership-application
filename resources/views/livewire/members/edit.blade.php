@@ -177,6 +177,24 @@
                                 </div>
                                 @enderror
                             </div>
+                            <div class="col-12 col-md-4 mt-2">
+                                <label>Proof<span class="text-danger"> *</span></label>
+                                @isset($addresses[$add_key]['proof_uploaded'])
+                                    @if ($addresses[$add_key]['proof_uploaded']->mime_type == 'application/pdf')
+                                        <a href="{{ $addresses[$add_key]['proof_uploaded']->getUrl() }}" target="_blank"><i class="fas fa-file"></i> proof_attachment</a>
+                                    @else
+                                        <a href="{{ str_replace('http:','',$addresses[$add_key]['proof_uploaded']->getUrl()) }}" target="_blank"><i class="fas fa-file"></i> proof_attachment</a>
+                                    @endif
+                                @endisset
+                                <div class="d-flex">
+                                    <input type="file" class="form-control datatable-input form-control" data-key="{{ $add_key }}" placeholder="Proof" data-col-index="0" wire:model="addresses.{{$add_key}}.proof">
+                                </div>
+                                @error('addresses.'.$add_key.'.proof')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
 
                             @if(count($addresses) > 1)
                                 <div class="col-12 col-md-4 mt-3 text-end">

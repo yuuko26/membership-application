@@ -44,6 +44,7 @@ class Create extends Component
             'city_id' => null,
             'country_id' => null,
             'postal_code' => null,
+            'proof' => null,
         ];
     }
 
@@ -69,8 +70,8 @@ class Create extends Component
     {
         $this->validate([
             'name' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
+            'phone' => 'required|unique:members,phone,NULL,id,deleted_at,NULL',
+            'email' => 'required|unique:members,email,NULL,id,deleted_at,NULL',
             'referral_code' => 'nullable',
             'profile_image' => 'nullable|max:8192|image|mimes:png,jpeg,bmp,gif,svg,jpe,webp,jpg',
             'addresses' => 'required',
@@ -81,6 +82,7 @@ class Create extends Component
             'addresses.*.city_id' => 'required|exists:cities,id',
             'addresses.*.country_id' => 'required|exists:countries,id',
             'addresses.*.postal_code' => 'required',
+            'addresses.*.proof' => 'required|max:102400|file|mimes:png,jpeg,bmp,gif,svg,jpe,webp,jpg,pdf',
             'status' => 'required|in:'.implode(',',array_keys(Member::STATUS_SELECT)),
         ],[],[
             'addresses.*.address_type_id' => 'address type',
@@ -90,6 +92,7 @@ class Create extends Component
             'addresses.*.city_id' => 'city',
             'addresses.*.country_id' => 'country',
             'addresses.*.postal_code' => 'postal code',
+            'addresses.*.proof' => 'proof',
         ]);
 
         DB::beginTransaction();
@@ -131,7 +134,7 @@ class Create extends Component
 
         foreach ($this->addresses as $address)
         {
-            $member->addresses()->create([
+            $new_address = $member->addresses()->create([
                 'address_type_id' => $address['address_type_id'],
                 'address_line_1' => $address['address_line_1'],
                 'address_line_2' => $address['address_line_2'],
@@ -140,6 +143,11 @@ class Create extends Component
                 'country_id' => $address['country_id'],
                 'postal_code' => $address['postal_code'],
             ]);
+
+            if (isset($address['proof'])) {
+                $proof = $address['proof']->getRealPath();
+                $new_address->addMedia($proof)->toMediaCollection('proof');
+            }
         }
 
         DB::commit();
@@ -156,6 +164,7 @@ class Create extends Component
             'city_id' => null,
             'country_id' => null,
             'postal_code' => null,
+            'proof' => null,
         ];
     }
 

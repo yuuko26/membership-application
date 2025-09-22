@@ -40,6 +40,7 @@ class MemberExport implements FromCollection, WithMapping, WithHeadings, ShouldA
             $member->name,
             $member->phone,
             $member->email,
+            $member->referral_code,
             $member->status_name ?? '-',
         ] ;
     }
@@ -47,7 +48,7 @@ class MemberExport implements FromCollection, WithMapping, WithHeadings, ShouldA
     public function headings() : array
     {
         return [
-            ['#', 'Apply Date', 'Name', 'Phone', 'Email', 'Status'],
+            ['#', 'Apply Date', 'Name', 'Phone', 'Email', 'Referral Code', 'Status'],
         ];
     }
 }

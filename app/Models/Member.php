@@ -66,6 +66,11 @@ class Member extends Model implements HasMedia
         return $this->belongsTo(Member::class, 'referral_member_id');
     }
 
+    public function refer_members()
+    {
+        return $this->hasMany(Member::class, 'referral_member_id');
+    }
+
     public function addresses()
     {
         return $this->hasMany(Address::class);
@@ -81,6 +86,9 @@ class Member extends Model implements HasMedia
         });
         $query->when(request()->has('email') && filled(request('email')), function ($q) {
             $q->where('email', 'LIKE', '%' . request('email') . '%');
+        });
+        $query->when(request()->has('referral_code') && filled(request('referral_code')), function ($q) {
+            $q->where('referral_code', 'LIKE', '%' . request('referral_code') . '%');
         });
         $query->when(request()->has('created_year_month') && filled(request('created_year_month')), function ($q) {
             $year_month_arr = explode('-',request()->created_year_month);

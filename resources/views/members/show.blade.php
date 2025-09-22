@@ -142,9 +142,67 @@
                                         {{ $address->country?->name ?? '-'}}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>
+                                        Proof
+                                    </th>
+                                    <td>
+                                        @if($address->proof)
+                                            @if ($address->proof->mime_type == 'application/pdf')
+                                                <a href="{{ $address->proof->getUrl() }}" target="_blank"><i class="fas fa-file"></i> proof_attachment</a>
+                                            @else
+                                                <a href="{{ str_replace('http:','',$address->proof->getUrl()) }}" target="_blank"><i class="fas fa-file"></i> proof_attachment</a>
+                                            @endif
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title py-2">
+                        Referral Information
+                    </h5>
+                    <table class="table table-bordered" id="referTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Referral Code</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($member->refer_members as $refer_member)
+                                <tr>
+                                    <td>
+                                        {{ $refer_member->name ?? '-'}}
+                                    </td>
+                                    <td>
+                                        {{ $refer_member->phone ?? '-'}}
+                                    </td>
+                                    <td>
+                                        {{ $refer_member->email ?? '-'}}
+                                    </td>
+                                    <td>
+                                        {{ $refer_member->referral_code ?? '-'}}
+                                    </td>
+                                    <td>
+                                        {{ $refer_member->status_name ?? '-'}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -152,4 +210,12 @@
 @endsection
 
 @push('script')
+    <script>
+        $(document).ready(function() {
+            $('#referTable').DataTable({
+                buttons: [],
+                "iDisplayLength": 10
+            });
+        });
+    </script>
 @endpush

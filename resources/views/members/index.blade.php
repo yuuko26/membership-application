@@ -84,6 +84,9 @@
                             <input type="text" class="form-control datatable-input" id="email" placeholder="Email" data-col-index="2">
                         </div>
                         <div class="flex-grow-1 col-auto mb-2">
+                            <input type="text" class="form-control datatable-input" id="referral_code" placeholder="Referral Code" data-col-index="2">
+                        </div>
+                        <div class="flex-grow-1 col-auto mb-2">
                             <select class="form-select datatable-input form-control" id="member_status">
                                 <option value="">All Status</option>
                                 @foreach(\App\Models\Member::STATUS_SELECT as $key => $label)

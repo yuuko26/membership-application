@@ -62,10 +62,11 @@ class MemberDataTable extends DataTable
             ->ajax([
                 'url' => route('members.index'),
                 'data' => 'function(d) {
+                    d.created_year_month = $("#created_year_month").val();
                     d.name = $("#name").val();
                     d.phone = $("#phone").val();
                     d.email = $("#email").val();
-                    d.created_year_month = $("#created_year_month").val();
+                    d.referral_code = $("#referral_code").val();
                     d.member_status = $("#member_status").val();
                 }',
             ])
@@ -81,10 +82,11 @@ class MemberDataTable extends DataTable
                         $("#member-list-table").DataTable().ajax.reload();
                     });
                     $("#clearBtn").on("click",function () {
+                        $("#created_year_month").val(null);
                         $("#name").val(null);
                         $("#phone").val(null);
                         $("#email").val(null);
-                        $("#created_year_month").val(null);
+                        $("#referral_code").val(null);
                         $("#member_status").val(null);
                         $("#member_status").change();
                         $("#member-list-table").DataTable().ajax.reload();
@@ -148,6 +150,7 @@ class MemberDataTable extends DataTable
             Column::make('name')->orderable(false),
             Column::make('phone')->orderable(false),
             Column::make('email')->orderable(false),
+            Column::make('referral_code')->orderable(false),
             Column::make('member_status')->title('Status')->orderable(false),
             Column::make('action')->width('12%')->className('text-end')->title('')->orderable(false),
         ];

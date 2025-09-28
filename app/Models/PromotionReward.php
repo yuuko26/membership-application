@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Referral extends Model
+class PromotionReward extends Model
 {
-    //
      use SoftDeletes;
 
     /**
@@ -15,8 +14,11 @@ class Referral extends Model
      *
      * @var string
      */
-    protected $table = '';
+    protected $table = 'promotion_rewards';
     protected $guarded = [];
 
-
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
+    }
 }

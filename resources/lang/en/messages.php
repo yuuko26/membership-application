@@ -25,4 +25,5 @@ return [
     'done_registered' => 'Done Registered!',
     'something_error' => 'Something Error!',
     'nothing_updated' => 'Nothing to be updated.',
+    'has_been_used' => ':attribute has been used!',
 ];

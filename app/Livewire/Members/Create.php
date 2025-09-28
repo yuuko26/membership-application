@@ -28,7 +28,7 @@ class Create extends Component
     public $phone;
     public $email;
     public $referral_code;
-    public $status;
+    public $status = Member::STATUS_PENDING;
     public $addresses = [];
 
     public function mount()
@@ -113,19 +113,6 @@ class Create extends Component
             'referral_member_id' => $referral_member?->id ?? null,
             'status' => $this->status,
         ]);
-
-        // generate crypto secure byte string
-        $bytes = random_bytes(8).substr($member->phone,-3);
-        // convert to alphanumeric (also with =, + and /) string
-        $encoded = base64_encode($bytes);
-        // remove the chars we don't want
-        $stripped = str_replace(['=', '+', '/'], '', $encoded);
-        // get the prefix from the email
-        $mail = explode('@',$member->email);
-        $prefix = strtoupper(substr($mail[0],0,3));
-        // format the final referral code
-        $member->referral_code = $prefix . $stripped;
-        $member->save();
 
         if (isset($this->profile_image)) {
             $profile_image = $this->profile_image->getRealPath();

@@ -31,11 +31,60 @@ class Member extends Model implements HasMedia
     ];
 
     public const STATUS_SELECT = [
-        '0' => 'Pending',
-        '1' => 'Approved',
-        '2' => 'Rejected',
-        '3' => 'Terminated',
+        self::STATUS_PENDING => 'Pending',
+        self::STATUS_APPROVED => 'Approved',
+        self::STATUS_REJECTED => 'Rejected',
+        self::STATUS_TERMINATED => 'Terminated',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->referral_code = $model->referral_code ?? static::generateReferralCode($model);
+        });
+
+        static::created(function ($model) {
+            static::insertReferral($model);
+        });
+    }
+
+    public static function generateReferralCode($member)
+    {
+        do {
+            // generate crypto secure byte string
+            $bytes = random_bytes(8).substr($member->phone,-3);
+            // convert to alphanumeric (also with =, + and /) string
+            $encoded = base64_encode($bytes);
+            // remove the chars we don't want
+            $stripped = str_replace(['=', '+', '/'], '', $encoded);
+            // get the prefix from the email
+            $mail = explode('@',$member->email);
+            $prefix = strtoupper(substr($mail[0],0,3));
+            // format the final referral code
+            $referral_code = $prefix . $stripped;
+
+        } while (static::where('referral_code', $referral_code)->exists());
+
+        return $referral_code;
+    }
+
+    public static function insertReferral($member)
+    {
+        $treeData = ['trace_key' => $member->id];
+
+        if ($referralTree = $member->referred_by?->referral_tree)
+        {
+            $traceKeyParts   = explode('/', $referralTree->trace_key);
+            $traceKeyParts[] = $member->id;
+
+            $treeData = [
+                'upline_id' => $member->referral_member_id,
+                'level'     => $referralTree->level + 1,
+                'trace_key' => implode('/', $traceKeyParts),
+            ];
+        }
+        $member->referral_tree()->create($treeData);
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -71,9 +120,24 @@ class Member extends Model implements HasMedia
         return $this->hasMany(Member::class, 'referral_member_id');
     }
 
+    public function referral_tree()
+    {
+        return $this->hasOne(ReferralTree::class, 'member_id');
+    }
+
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function rewards()
+    {
+        return $this->hasMany(MemberReward::class);
+    }
+
+    public function promotion_rewards()
+    {
+        return $this->hasMany(MemberPromotionReward::class);
     }
 
     public function scopeLocalSearch($query)

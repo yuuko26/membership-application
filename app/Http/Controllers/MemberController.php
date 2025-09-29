@@ -6,6 +6,7 @@ use App\DataTables\MemberDataTable;
 use App\Exports\MemberExport;
 use App\Models\Address;
 use App\Models\Member;
+use App\Models\ReferralTree;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,16 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        return view('members.show', compact('member'));
+        $traceKey = $member->referral_tree->trace_key;
+
+        $downlines = $traceKey ? ReferralTree::select(['member_id', 'upline_id', 'level'])
+            ->with('member')
+            ->where('trace_key', 'like', "$traceKey/%")
+            ->get()
+            ->groupBy('level')
+            : collect();
+
+        return view('members.show', compact('member', 'downlines'));
     }
 
     /**

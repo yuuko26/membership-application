@@ -32,9 +32,10 @@ class ReferralCalculation implements ShouldQueue
         $promotions = Promotion::with('rewards')
             ->where('start_date', '<=', $today)
             ->where('end_date', '>=', $today)
+            ->where('status', Promotion::STATUS_ACTIVE)
             ->get();
 
-        $members = Member::where('status',Member::STATUS_APPROVED)->get();
+        $members = Member::where('status', Member::STATUS_APPROVED)->get();
         foreach ($members as $member) {
             foreach ($promotions as $promotion) {
                 $this->checkPromotion($member, $promotion);
@@ -45,7 +46,7 @@ class ReferralCalculation implements ShouldQueue
     protected function checkPromotion($member, $promotion)
     {
         $referral_count = $member->refer_members()
-//            ->where('status', Member::STATUS_APPROVED)
+            ->where('status', Member::STATUS_APPROVED)
             ->whereBetween('created_at', [$promotion->start_date->format('Y-m-d 00:00:00'), $promotion->end_date->format('Y-m-d 23:59:59')])
             ->count();
 

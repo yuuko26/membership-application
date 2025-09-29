@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\MemberRewardDataTable;
+use App\Exports\MemberRewardExport;
 use App\Jobs\ReferralCalculation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MemberRewardController extends Controller
 {
@@ -14,6 +17,12 @@ class MemberRewardController extends Controller
     public function index(MemberRewardDataTable $dataTable)
     {
         return $dataTable->render('member-rewards.index');
+    }
+
+    public function export(Request $request)
+    {
+        $current_date = Carbon::now()->format('dmy');
+        return Excel::download(new MemberRewardExport($request->export_date_start, $request->export_date_end), 'MemberRewardList_'.$current_date.'.xlsx');
     }
 
     /**

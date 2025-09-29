@@ -47,16 +47,16 @@
                     <input type="email" class="form-control" id="inputEmail" wire:model="email" value="{{old('email', '')}}" placeholder="Email">
                     @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>
-                <div class="form-group col-md-6">
-                    @if($member->referred_by)
+                @if($member->referred_by)
+                    <div class="form-group col-md-6">
                         <label for="inputReferralBy" class="form-label">Referred By</label>
                         <input type="text" class="form-control" id="inputReferralBy" value="{{ $member->referred_by->name }}" placeholder="Referral By" disabled>
-                    @else
-                        <label for="inputReferralCode" class="form-label">Referral Code</label>
-                        <input type="text" class="form-control" id="inputReferralCode" wire:model="referral_code" value="{{old('referral_code', '')}}" placeholder="Referral Code">
-                        @error('referral_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
-                    @endif
-                </div>
+{{--                    @else--}}
+{{--                        <label for="inputReferralCode" class="form-label">Referral Code</label>--}}
+{{--                        <input type="text" class="form-control" id="inputReferralCode" wire:model="referral_code" value="{{old('referral_code', '')}}" placeholder="Referral Code">--}}
+{{--                        @error('referral_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror--}}
+                    </div>
+                @endif
                 <div class="form-group col-md-6">
                     <label for="inputStatus" class="form-label">Status<span class="text-danger"> *</span></label>
                     <select wire:model="status" class="form-select select-status" id="inputStatus">

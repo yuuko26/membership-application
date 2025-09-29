@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@push('style')
+    <style>
+    </style>
+@endpush
+
 @section('content')
     <!-- BREADCRUMB -->
     <div class="breadcrumb-header justify-content-between">
@@ -167,6 +172,39 @@
 
         <div class="col-12">
             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title py-2">
+                        Referral Tree
+                    </h5>
+
+                    @if($downlines->isNotEmpty())
+                        <div class="accordion scroll-container scroll-y" id="accordionFlushExample">
+                            @foreach($downlines as $key => $level_group)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="flush-heading1">
+                                        <button class="accordion-button @if(!$loop->first) collapsed @endif fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$key}}" aria-expanded="true" aria-controls="flush-collapse{{$key}}">
+                                            <span class="fw-bold font-size-14">Level {{ $loop->iteration }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapse{{$key}}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="flush-heading1" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body" id="accordionFlushItem">
+                                            @foreach($level_group as $refer_tree)
+                                                <div>
+                                                    {{ $refer_tree->member?->name }}
+                                                    @if($refer_tree->upline_id != $member->id)
+                                                        (by {{ $refer_tree->upline?->name }})
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p>Nothing Available here...</p>
+                    @endif
+                </div>
                 <div class="card-body">
                     <h5 class="card-title py-2">
                         Referral Information

@@ -25,6 +25,9 @@ class MemberRewardDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn('DT_RowIndex')
+            ->editColumn('created_at', function($item) {
+                return $item->created_at->format('d M Y');
+            })
             ->addColumn('type', function($item) {
                 $model = explode("\\", $item->sourceable_type, 3);
                 return preg_replace('/(?<!\ )[A-Z]/', ' $0', $model[2]);
@@ -48,7 +51,7 @@ class MemberRewardDataTable extends DataTable
      */
     public function query(MemberReward $model)
     {
-        return $model->with(['member','sourceable'])->whereHas('member')->localsearch(request());
+        return $model->with(['member','sourceable'])->whereHas('member')->latest('id')->localsearch(request());
     }
 
     /**
@@ -64,8 +67,9 @@ class MemberRewardDataTable extends DataTable
             ->ajax([
                 'url' => route('member-rewards.index'),
                 'data' => 'function(d) {
+                    d.date_start = $("#date_start").val();
+                    d.date_end = $("#date_end").val();
                     d.member_name = $("#member_name").val();
-                    d.created_year_month = $("#created_year_month").val();
                 }',
             ])
             ->dom("<'d-flex justify-content-end tw-py-2' p><'row scroll-container'<'col-sm-12 overflow-scroll' t>><'row'<'col-lg-12' <'tw-py-3 col-lg-12 d-flex flex-column flex-sm-row align-items-center justify-content-between tw-space-y-5 md:tw-space-y-0' ip>r>>")
@@ -80,9 +84,9 @@ class MemberRewardDataTable extends DataTable
                         $("#member-reward-list-table").DataTable().ajax.reload();
                     });
                     $("#clearBtn").on("click",function () {
+                        $("#date_start").val(null);
+                        $("#date_end").val(null);
                         $("#member_name").val(null);
-                        $("#created_year_month").val(null);
-                        $("#created_year_month").change();
                         $("#member-reward-list-table").DataTable().ajax.reload();
                     });
                     $("#member-reward-list-table").on("click", ".delFunc", function(e) {
@@ -116,6 +120,7 @@ class MemberRewardDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')->title('#')->orderable(false),
+            Column::make('created_at')->orderable(false),
             Column::make('member.name')->title('Member Name')->orderable(false),
             Column::make('type')->orderable(false),
             Column::make('description')->orderable(false),

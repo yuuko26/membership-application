@@ -35,6 +35,12 @@ class MemberReward extends Model
             $month = $year_month_arr[1];
             $q->whereYear('created_at',$year)->whereMonth('created_at',$month);
         });
+        $query->when(request()->has('date_start') && filled(request('date_start')), function ($q) {
+            $q->whereDate('member_rewards.created_at', '>=', request('date_start'));
+        });
+        $query->when(request()->has('date_end') && filled(request('date_end')), function ($q) {
+            $q->whereDate('member_rewards.created_at', '<=', request('date_end'));
+        });
         $query->when(request()->has('member_name') && filled(request('member_name')), function ($q) {
             $q->whereHas('member', function($qq) {
                 $qq->where('name', 'LIKE', '%' . request('member_name') . '%');

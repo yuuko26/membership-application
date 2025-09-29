@@ -14,4 +14,5 @@ Route::resource('members', \App\Http\Controllers\MemberController::class);
 Route::resource('promotions', \App\Http\Controllers\PromotionController::class);
 
 // Rewards
+Route::get('member-rewards/export', [\App\Http\Controllers\MemberRewardController::class, 'export'])->name('member-rewards.export');
 Route::resource('member-rewards', \App\Http\Controllers\MemberRewardController::class);

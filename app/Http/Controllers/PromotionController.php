@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\PromotionDataTable;
+use App\Models\Member;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class PromotionController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'start_date' => 'required|date',
+            'start_date' => 'required|date|after:'.now()->format('Y-m-d'),
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|in:'.implode(',',array_keys(Promotion::STATUS_SELECT)),
             'tiers.*' => 'required',
@@ -100,7 +101,7 @@ class PromotionController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'start_date' => 'required|date',
+            'start_date' => 'required|date|after:'.now()->format('Y-m-d'),
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|in:'.implode(',',array_keys(Promotion::STATUS_SELECT)),
             'tiers.*' => 'required',

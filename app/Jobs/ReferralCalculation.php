@@ -27,11 +27,11 @@ class ReferralCalculation implements ShouldQueue
      */
     public function handle(): void
     {
-        $today = Carbon::today()->format('Y-m-d');
+        $yesterday = Carbon::yesterday()->format('Y-m-d');
 
         $promotions = Promotion::with('rewards')
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
+            ->where('start_date', '<=', $yesterday)
+            ->where('end_date', '>=', $yesterday)
             ->where('status', Promotion::STATUS_ACTIVE)
             ->get();
 
